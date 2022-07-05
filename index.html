@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sort Value</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <div class="mb-3">
+        <h1 class="form-title">Sort Value</h1>
+      </div>
+      <div class="mb-3">
+        <label for="required" class="form-label">Form</label>
+        <textarea class="form-control" id="required" rows="10"></textarea>
+      </div>
+      <div class="mb-3">
+        <button type="button" class="btn btn-primary" id="start">to</button>
+        <button type="button" class="btn btn-main" id="copy">copy</button>
+      </div>
+      <div class="mb-3">
+        <label for="response" class="form-label">To</label>
+        <textarea class="form-control" id="response" rows="10"></textarea>
+      </div>
+    </div>
+    <script>
+      let btn = document.querySelector('#start')
+      let required = document.querySelector('#required')
+      let response = document.querySelector('#response')
+      const rgb2gary = (color) => {
+        let R = parseInt('0X' + color.slice(1,3))
+        let G = parseInt('0X' + color.slice(3,5))
+        let B = parseInt('0X' + color.slice(5,7))
+        let newColor = (R*299 + G*587 + B*114 + 500) / 1000 // RGB to gary
+        let newGray = parseInt(newColor).toString(16)
+        // console.log('newColor', R, G, B, `#${newGray}${newGray}${newGray}${color.slice(7,9)}`, color)
+        return `#${newGray}${newGray}${newGray}${color.slice(7,9)}`
+      }
+      btn.onclick = function () {
+        let res = []
+        
+        if (required.value && required.value !== null) {
+          try {
+            response.value = ''
+            let jsonData = required.value.split(/[\n]/)
+            console.log('btn', required.value, jsonData)
+            jsonData.sort(function (a, b) {
+              return a.localeCompare(b);
+            })
+            for (let index = 0; index < jsonData.length; index++) {
+              const item = jsonData[index];
+              console.log('item', item)
+              // res.push(item)
+              response.value = response.value + item + '\n'
+            }
+            // response.value = response.value + '\\r\\n' + res
+          } catch (error) {
+            // alert('Error')
+          }
+        } else {
+          // alert('Error')
+        }
+      }
+      const btnCopy = document.querySelector('#copy');
+      btnCopy.addEventListener('click', () => {
+        response.select();
+        if (document.execCommand('copy')) {
+          document.execCommand('copy');
+          alert('Finished!');
+        }
+      })
+    </script>   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  </body>
+</html>
